@@ -5,15 +5,20 @@ public class Main {
 	public static void main(String[] args) {
 		Scanner scanner = new Scanner(System.in);
 		int N = scanner.nextInt();
+		int M = scanner.nextInt();
+		long S[] = new long[N + 1];
+		S[0] = 0;
 		int sum = 0;
-		int max = 0;
 		for(int i=0;i<N;i++) {
 			int a = scanner.nextInt();
 			sum += a;
-			if(max<a) 
-				max = a;
+			S[i + 1] = sum;
 		}
-		System.out.println(sum*100.0/N/max);
+		for(int i=0;i<M;i++) {
+			int a = scanner.nextInt();
+			int b = scanner.nextInt();
+			System.out.println(S[b] - S[a - 1]);
+		}
 		scanner.close();
 	}
  
