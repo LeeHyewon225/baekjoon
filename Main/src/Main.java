@@ -5,21 +5,25 @@ public class Main {
 	public static void main(String[] args) {
 		Scanner s = new Scanner(System.in);
 		int N = s.nextInt();
-		int M = s.nextInt();
-		long S[] = new long[N + 1];
-		long C[] = new long[M];
-		long result = 0;
-		for (int i = 1; i < N + 1; i++) {
-			int a = s.nextInt();
-			S[i] += S[i - 1] + a;
-			S[i] %= M;
-			if (S[i] == 0)
-				result++;
-			C[(int) S[i]]++;
+		int sum = 1;
+		int count = 1;
+		int start_index = 1;
+		int end_index = 1;
+		while(start_index < (N+1)/2){
+			if(sum < N) {
+				end_index++;
+				sum += end_index;
+			}
+			else if(sum > N) {
+				sum -= start_index;
+				start_index++;
+			}
+			else {
+				count++;
+				end_index++;
+				sum += end_index;
+			}
 		}
-		for (int i = 0; i < M; i++) {
-			result += C[i] * (C[i] - 1) / 2;
-		}
-		System.out.println(result);
+		System.out.println(count);
 	}
 }
