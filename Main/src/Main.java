@@ -1,50 +1,29 @@
 import java.io.BufferedReader;
-import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
-import java.util.Arrays;
-import java.util.Deque;
-import java.util.LinkedList;
-import java.util.Scanner;
 import java.util.Stack;
 import java.util.StringTokenizer;
 
 public class Main {
 
 	public static void main(String[] args) throws IOException {
-		Scanner s = new Scanner(System.in);
-		StringBuffer sb = new StringBuffer();
+		BufferedReader bf = new BufferedReader(new InputStreamReader(System.in));
+		int N = Integer.parseInt(bf.readLine());
+		StringTokenizer st = new StringTokenizer(bf.readLine());
 		Stack<Integer> stack = new Stack<>();
-		int n = s.nextInt();
-		int A[] = new int[n];
-		for (int i = 0; i < n; i++)
-			A[i] = s.nextInt();
-		int num = 1;
-		boolean result = true;
-		for (int i = 0; i < n; i++) {
-			if (A[i] >= num) {
-				while (A[i] >= num) {
-					stack.add(num);
-					num++;
-					sb.append("+\n");
-				}
-				stack.pop();
-				sb.append("-\n");
+		int A[] = new int[N];
+		int answer[] = new int[N];
+		for (int i = 0; i < N; i++) {
+			A[i] = Integer.parseInt(st.nextToken());
+			while (!stack.isEmpty() && A[stack.peek()] < A[i]) {
+				answer[stack.pop()] = A[i];
 			}
-			else {
-				if(stack.peek() == A[i]) {
-					stack.pop();
-					sb.append("-\n");
-				}
-				else {
-					System.out.println("NO");
-					result = false;
-					break;
-				}
-			}
+			stack.push(i);
 		}
-		if(result)
-			System.out.println(sb);
+		StringBuffer sb = new StringBuffer();
+		for (int i = 0; i < N; i++) {
+			sb.append(answer[i] != 0 ? answer[i] + " " : -1 + " ");
+		}
+		System.out.print(sb);
 	}
 }
