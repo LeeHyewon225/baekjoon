@@ -1,29 +1,22 @@
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.util.Stack;
-import java.util.StringTokenizer;
+import java.util.LinkedList;
+import java.util.Queue;
+import java.util.Scanner;
 
 public class Main {
 
 	public static void main(String[] args) throws IOException {
-		BufferedReader bf = new BufferedReader(new InputStreamReader(System.in));
-		int N = Integer.parseInt(bf.readLine());
-		StringTokenizer st = new StringTokenizer(bf.readLine());
-		Stack<Integer> stack = new Stack<>();
-		int A[] = new int[N];
-		int answer[] = new int[N];
-		for (int i = 0; i < N; i++) {
-			A[i] = Integer.parseInt(st.nextToken());
-			while (!stack.isEmpty() && A[stack.peek()] < A[i]) {
-				answer[stack.pop()] = A[i];
-			}
-			stack.push(i);
+		Scanner s = new Scanner(System.in);
+		int N = s.nextInt();
+		Queue<Integer> queue = new LinkedList<>();
+		for (int i = 1; i <= N; i++) {
+			queue.add(i);
 		}
-		StringBuffer sb = new StringBuffer();
-		for (int i = 0; i < N; i++) {
-			sb.append(answer[i] != 0 ? answer[i] + " " : -1 + " ");
+		queue.poll();
+		for (int i = 0; i < N - 2; i++) {
+			queue.add(queue.poll());
+			queue.poll();
 		}
-		System.out.print(sb);
+		System.out.println(N == 1 ? 1 : queue.poll());
 	}
 }
