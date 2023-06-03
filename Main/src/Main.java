@@ -5,24 +5,28 @@ public class Main {
 
 	public static void main(String[] args) throws IOException {
 		Scanner s = new Scanner(System.in);
-		String str = s.next();
-		int A[] = new int[str.length()];
-		for (int i = 0; i < str.length(); i++)
-			A[i] = Integer.parseInt(str.substring(i, i + 1));
-		for(int i=0;i<str.length();i++) {
-			int max = A[i];
-			int max_index = i;
-			for(int j=i;j<str.length();j++) {
-				if(max < A[j]) {
-					max = A[j];
-					max_index = j;
+		int N = s.nextInt();
+		int A[] = new int[N];
+		for (int i = 0; i < N; i++)
+			A[i] = s.nextInt();
+		for (int i = 1; i < N; i++)
+			for (int j = 0; j < i; j++)
+				if (A[i] < A[j]) {
+					int temp = A[i];
+					int now = i;
+					while (j < now) {
+						A[now] = A[now - 1];
+						now--;
+					}
+					A[j] = temp;
 				}
-			}
-			int temp = A[i];
-			A[i] = A[max_index];
-			A[max_index] = temp;
+		int sum = 0;
+		int S[] = new int[N + 1];
+		for (int i = 1; i <= N; i++) {
+			S[i] += S[i - 1] + A[i - 1];
 		}
-		for(int i=0;i<str.length();i++)
-			System.out.print(A[i]);
+		for (int i = 1; i <= N; i++)
+			sum += S[i];
+		System.out.print(sum);
 	}
 }
