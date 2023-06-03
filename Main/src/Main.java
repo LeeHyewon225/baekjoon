@@ -1,15 +1,28 @@
 import java.io.IOException;
-import java.util.Arrays;
 import java.util.Scanner;
 
 public class Main {
 
 	public static void main(String[] args) throws IOException {
 		Scanner s = new Scanner(System.in);
-		char A[] = s.next().toCharArray();
-		Arrays.sort(A);
-		for (int i = A.length - 1; i >= 0; i--)
-			System.out.print(A[i] - '0');
-
+		String str = s.next();
+		int A[] = new int[str.length()];
+		for (int i = 0; i < str.length(); i++)
+			A[i] = Integer.parseInt(str.substring(i, i + 1));
+		for(int i=0;i<str.length();i++) {
+			int max = A[i];
+			int max_index = i;
+			for(int j=i;j<str.length();j++) {
+				if(max < A[j]) {
+					max = A[j];
+					max_index = j;
+				}
+			}
+			int temp = A[i];
+			A[i] = A[max_index];
+			A[max_index] = temp;
+		}
+		for(int i=0;i<str.length();i++)
+			System.out.print(A[i]);
 	}
 }
