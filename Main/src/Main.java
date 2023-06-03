@@ -12,34 +12,32 @@ import java.util.Scanner;
 import java.util.StringTokenizer;
 
 public class Main {
-	static class Node {
+	static class Node implements Comparable<Node>{
 		public int index;
-		public long value;
-
-		public Node(int a, long b) {
-			index = a;
-			value = b;
+		public int value;
+		
+		public Node(int index, int value) {
+			this.index = index;
+			this.value = value;
+		}
+		
+		public int compareTo(Node o) {
+			return this.value - o.value;
 		}
 	}
 
 	public static void main(String[] args) throws IOException {
-		Scanner s = new Scanner(System.in);
-		int N = s.nextInt();
-		int A[] = new int[N];
-		for (int i = 0; i < N; i++) {
-			A[i] = s.nextInt();
-		}
-		for (int i = 0; i < N; i++) {
-			for (int j = 0; j < N - i - 1; j++) {
-				if (A[j] > A[j + 1]) {
-					int temp = A[j];
-					A[j] = A[j + 1];
-					A[j + 1] = temp;
-				}
-			}
-		}
-		for (int i = 0; i < N; i++) {
-			System.out.println(A[i]);
-		}
+		BufferedReader bf = new BufferedReader(new InputStreamReader(System.in));
+		int N = Integer.parseInt(bf.readLine());
+		Node A[] = new Node[N];
+		for (int i = 0; i < N; i++) 
+			A[i] = new Node(i, Integer.parseInt(bf.readLine()));
+		Arrays.sort(A);
+		int answer = 0;
+		for(int i=0;i<N;i++) 
+			if(answer <A[i].index - i)
+				answer = A[i].index - i;
+		System.out.print(answer + 1);
+		
 	}
 }
