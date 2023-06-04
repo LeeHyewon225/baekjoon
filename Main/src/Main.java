@@ -1,32 +1,49 @@
+import java.io.BufferedReader;
 import java.io.IOException;
-import java.util.Scanner;
+import java.io.InputStreamReader;
+import java.util.StringTokenizer;
 
 public class Main {
 
 	public static void main(String[] args) throws IOException {
-		Scanner s = new Scanner(System.in);
-		int N = s.nextInt();
+		BufferedReader bf = new BufferedReader(new InputStreamReader(System.in));
+		StringTokenizer st = new StringTokenizer(bf.readLine());
+		int N = Integer.parseInt(st.nextToken());
 		int A[] = new int[N];
-		for (int i = 0; i < N; i++)
-			A[i] = s.nextInt();
-		for (int i = 1; i < N; i++)
-			for (int j = 0; j < i; j++)
-				if (A[i] < A[j]) {
-					int temp = A[i];
-					int now = i;
-					while (j < now) {
-						A[now] = A[now - 1];
-						now--;
-					}
-					A[j] = temp;
-				}
-		int sum = 0;
-		int S[] = new int[N + 1];
-		for (int i = 1; i <= N; i++) {
-			S[i] += S[i - 1] + A[i - 1];
+		for (int i = 0; i < N; i++) {
+			A[i] = Integer.parseInt(bf.readLine());
 		}
-		for (int i = 1; i <= N; i++)
-			sum += S[i];
-		System.out.print(sum);
+		pivot(A, 0, N - 1);
+		for (int i = 0; i < N; i++)
+			System.out.println(A[i] + " ");
 	}
+
+	static void pivot(int A[], int s, int e) {
+		int start = s;
+		int end = e;
+		int p = e;
+		if (s > e)
+			return;
+		while (s != e) {
+			if (A[s] < A[p])
+				s++;
+			else if (A[e] >= A[p])
+				e--;
+			else if (A[s] > A[p] && A[e] < A[p]) {
+				int temp = A[s];
+				A[s] = A[e];
+				A[e] = temp;
+				s++;
+			}
+		}
+		
+		int temp = A[s];
+		A[s] = A[p];
+		A[p] = temp;
+		
+		pivot(A, start, s - 1);
+		pivot(A, s + 1, end);
+
+	}
+
 }
