@@ -43,7 +43,5 @@ public class Main {
 		
 		pivot(A, start, s - 1);
 		pivot(A, s + 1, end);
-
 	}
-
 }
