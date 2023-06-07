@@ -1,48 +1,46 @@
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.StringTokenizer;
+import java.io.OutputStreamWriter;
 
 public class Main {
 
-	public static int[] A, tmp;
-	public static long result = 0;
+	static int A[];
+	static int N;
 
 	public static void main(String[] args) throws IOException {
 		BufferedReader bf = new BufferedReader(new InputStreamReader(System.in));
-		int N = Integer.parseInt(bf.readLine());
+		BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
+		N = Integer.parseInt(bf.readLine());
 		A = new int[N];
-		tmp = new int[N];
-		StringTokenizer st = new StringTokenizer(bf.readLine());
 		for (int i = 0; i < N; i++)
-			A[i] = Integer.parseInt(st.nextToken());
-		mergeSort(0, N - 1);
-		System.out.println(result);
+			A[i] = Integer.parseInt(bf.readLine());
+		Radix_Sort(5);
+		for (int i = 0; i < N; i++)
+			bw.write(A[i] + "\n");
+		bw.flush();
+		bw.close();
+
 	}
 
-	static void mergeSort(int s, int e) {
-		if (s >= e)
-			return;
-		int m = s + (e - s) / 2;
-		mergeSort(s, m);
-		mergeSort(m + 1, e);
-		for (int i = s; i <= e; i++) {
-			tmp[i] = A[i];
+	static void Radix_Sort(int max_size) {
+		int count = 0;
+		int jarisu = 1;
+		int output[] = new int[N];
+		while (count < max_size) {
+			int bucket[] = new int[10];
+			for (int i = 0; i < N; i++)
+				bucket[A[i] / jarisu % 10]++;
+			for (int i = 1; i < 10; i++)
+				bucket[i] += bucket[i - 1];
+			for (int i = N - 1; i >= 0; i--) {
+				output[--bucket[A[i] / jarisu % 10]] = A[i];
+			}
+			for (int i = 0; i < N; i++)
+				A[i] = output[i];
+			count++;
+			jarisu *= 10;
 		}
-		int k = s;
-		int index1 = s;
-		int index2 = m + 1;
-		while (index1 <= m && index2 <= e) {
-			if (tmp[index1] > tmp[index2]) {
-				result += index2 - k;
-				A[k++] = tmp[index2++];
-			} else
-				A[k++] = tmp[index1++];
-		}
-		while (index1 <= m)
-			A[k++] = tmp[index1++];
-		while (index2 <= e)
-			A[k++] = tmp[index2++];
 	}
-
 }
