@@ -15,51 +15,46 @@ public class Main {
 		for (int i = 0; i < N; i++) {
 			A[i] = Integer.parseInt(st.nextToken());
 		}
-		pivot(A, 0, N - 1, K);
+		quickSort(A, 0, N - 1, K - 1);
 		System.out.println(A[K - 1]);
 	}
 
-	static void pivot(int A[], int s, int e, int K) {
-		if (s >= e)
+	static void quickSort(int A[], int start, int end, int K) {
+		if (start >= end)
 			return;
-		int start = s;
-		int end = e;
-		int p;
-		if (s + 1 == e) {
-			if (A[s] > A[e]) {
-				int temp = A[s];
-				A[s] = A[e];
-				A[e] = temp;
-			}
-			p = e;
-		} else {
-			int m = (s + e) / 2;
-			int temp = A[s];
-			A[s] = A[m];
-			A[m] = temp;
-			s++;
-			while (s <= e) {
-				while (A[e] > A[start] && e > 0)
-					e--;
-				while (A[s] < A[start] && s < A.length - 1)
-					s++; 
-				if (s <= e) {
-					temp = A[s];
-					A[s] = A[e];
-					A[e] = temp;
-					s++;
-					e--;
-				}
-			}
-			temp = A[start];
-			A[start] = A[e];
-			A[e] = temp;
-			p = e;
-		}
-		if (K - 1 < p)
-			pivot(A, start, p - 1, K);
-		else if (p < K - 1)
-			pivot(A, p + 1, end, K);
+		int pivot = pivot(A, start, end);
+		if (K < pivot)
+			quickSort(A, start, pivot - 1, K);
+		else if (pivot < K)
+			quickSort(A, pivot + 1, end, K);
+	}
 
+	static int pivot(int A[], int start, int end) {
+		if (start + 1 == end) {
+			if (A[start] > A[end])
+				swap(A, start, end);
+			return end;
+		}
+		int Middle = (start + end) / 2;
+		swap(A, Middle, start);
+		int i = start + 1;
+		int j = end;
+		while (i <= j) {
+			if (A[start] < A[j])
+				j--;
+			else if (A[start] > A[i])
+				i++;
+			else if (i <= j) {
+				swap(A, i++, j--);
+			}
+		}
+		swap(A, start, j);
+		return j;
+	}
+
+	static void swap(int A[], int i, int j) {
+		int temp = A[i];
+		A[i] = A[j];
+		A[j] = temp;
 	}
 }
