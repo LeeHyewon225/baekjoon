@@ -1,43 +1,39 @@
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.ArrayList;
-import java.util.StringTokenizer;
 
 public class Main {
 
 	public static void main(String[] args) throws IOException {
 		BufferedReader bf = new BufferedReader(new InputStreamReader(System.in));
-		StringTokenizer st = new StringTokenizer(bf.readLine());
-		int N = Integer.parseInt(st.nextToken());
-		int M = Integer.parseInt(st.nextToken());
-		ArrayList<Integer> A[] = new ArrayList[N];
-		for (int i = 0; i < N; i++)
-			A[i] = new ArrayList<Integer>();
-		for (int i = 0; i < M; i++) {
-			st = new StringTokenizer(bf.readLine());
-			int u = Integer.parseInt(st.nextToken()) - 1;
-			int v = Integer.parseInt(st.nextToken()) - 1;
-			A[u].add(v);
-			A[v].add(u);
+		int N = Integer.parseInt(bf.readLine());
+		if(N==1) {
+			System.out.println(2+"\n" + 3+"\n" +5+"\n" +7+"\n");
+			return;
 		}
-		int visit[] = new int[N];
-		int count = 0;
-		for (int i = 0; i < N; i++) {
-			if (visit[i] == 0) {
-				DFS(i, A, visit);
-				count++;
-			}
-		}
-		System.out.println(count);
+		DFS(2, 1, N);
+		DFS(3, 1, N);
+		DFS(5, 1, N);
+		DFS(7, 1, N);
 	}
 
-	static void DFS(int i, ArrayList A[], int visit[]) {
-		visit[i] = 1;
-		for (int j = 0; j < A[i].size(); j++) {
-			if (visit[(int) A[i].get(j)] == 0)
-				DFS((int) A[i].get(j), A, visit);
+	static void DFS(int num, int digit, int N) {
+		if (digit == N) {
+			System.out.println(num);
+			return;
+		}
+		for (int j = 0; j < 5; j++) {
+			int k = num * 10 + j * 2 + 1;
+			if (isPrime(k))
+				DFS(k, digit + 1, N);
 		}
 	}
 
+	static boolean isPrime(int num) {
+		for (int i = 2; i < num; i++) {
+			if (num % i == 0)
+				return false;
+		}
+		return true;
+	}
 }
