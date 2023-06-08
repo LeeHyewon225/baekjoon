@@ -1,46 +1,43 @@
 import java.io.BufferedReader;
-import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
+import java.util.ArrayList;
+import java.util.StringTokenizer;
 
 public class Main {
 
-	static int A[];
-	static int N;
-
 	public static void main(String[] args) throws IOException {
 		BufferedReader bf = new BufferedReader(new InputStreamReader(System.in));
-		BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
-		N = Integer.parseInt(bf.readLine());
-		A = new int[N];
+		StringTokenizer st = new StringTokenizer(bf.readLine());
+		int N = Integer.parseInt(st.nextToken());
+		int M = Integer.parseInt(st.nextToken());
+		ArrayList<Integer> A[] = new ArrayList[N];
 		for (int i = 0; i < N; i++)
-			A[i] = Integer.parseInt(bf.readLine());
-		Radix_Sort(5);
-		for (int i = 0; i < N; i++)
-			bw.write(A[i] + "\n");
-		bw.flush();
-		bw.close();
-
+			A[i] = new ArrayList<Integer>();
+		for (int i = 0; i < M; i++) {
+			st = new StringTokenizer(bf.readLine());
+			int u = Integer.parseInt(st.nextToken()) - 1;
+			int v = Integer.parseInt(st.nextToken()) - 1;
+			A[u].add(v);
+			A[v].add(u);
+		}
+		int visit[] = new int[N];
+		int count = 0;
+		for (int i = 0; i < N; i++) {
+			if (visit[i] == 0) {
+				DFS(i, A, visit);
+				count++;
+			}
+		}
+		System.out.println(count);
 	}
 
-	static void Radix_Sort(int max_size) {
-		int count = 0;
-		int jarisu = 1;
-		int output[] = new int[N];
-		while (count < max_size) {
-			int bucket[] = new int[10];
-			for (int i = 0; i < N; i++)
-				bucket[A[i] / jarisu % 10]++;
-			for (int i = 1; i < 10; i++)
-				bucket[i] += bucket[i - 1];
-			for (int i = N - 1; i >= 0; i--) {
-				output[--bucket[A[i] / jarisu % 10]] = A[i];
-			}
-			for (int i = 0; i < N; i++)
-				A[i] = output[i];
-			count++;
-			jarisu *= 10;
+	static void DFS(int i, ArrayList A[], int visit[]) {
+		visit[i] = 1;
+		for (int j = 0; j < A[i].size(); j++) {
+			if (visit[(int) A[i].get(j)] == 0)
+				DFS((int) A[i].get(j), A, visit);
 		}
 	}
+
 }
