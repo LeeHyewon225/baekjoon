@@ -1,39 +1,45 @@
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.StringTokenizer;
 
 public class Main {
+	static boolean ABCDE = false;
 
 	public static void main(String[] args) throws IOException {
 		BufferedReader bf = new BufferedReader(new InputStreamReader(System.in));
-		int N = Integer.parseInt(bf.readLine());
-		if(N==1) {
-			System.out.println(2+"\n" + 3+"\n" +5+"\n" +7+"\n");
-			return;
+		StringTokenizer st = new StringTokenizer(bf.readLine());
+		int N = Integer.parseInt(st.nextToken());
+		int M = Integer.parseInt(st.nextToken());
+		ArrayList<Integer>[] A = new ArrayList[N];
+		int visit[] = new int[N];
+		for(int i=0;i<N;i++) 
+			A[i] = new ArrayList<Integer>();
+		for(int i=0;i<M;i++) {
+			st = new StringTokenizer(bf.readLine());
+			int a = Integer.parseInt(st.nextToken());
+			int b = Integer.parseInt(st.nextToken());
+			A[a].add(b);
+			A[b].add(a);
 		}
-		DFS(2, 1, N);
-		DFS(3, 1, N);
-		DFS(5, 1, N);
-		DFS(7, 1, N);
+		for(int i=0;i<N;i++) 
+			DFS(i, A, visit, 1);
+		System.out.println(ABCDE ? 1 : 0);
 	}
 
-	static void DFS(int num, int digit, int N) {
-		if (digit == N) {
-			System.out.println(num);
+	static void DFS(int i, ArrayList<Integer>[] A, int visit[], int depth) {
+		if(ABCDE)
+			return;
+		if(depth == 5) {
+			ABCDE = true;
 			return;
 		}
-		for (int j = 0; j < 5; j++) {
-			int k = num * 10 + j * 2 + 1;
-			if (isPrime(k))
-				DFS(k, digit + 1, N);
+		visit[i] = 1;
+		for(int j=0;j<A[i].size();j++) {
+			if(visit[(int) A[i].get(j)] == 0)
+				DFS((int) A[i].get(j), A, visit, depth+1);
 		}
-	}
-
-	static boolean isPrime(int num) {
-		for (int i = 2; i < num; i++) {
-			if (num % i == 0)
-				return false;
-		}
-		return true;
+		visit[i] = 0;
 	}
 }
