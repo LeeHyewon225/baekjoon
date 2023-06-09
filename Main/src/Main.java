@@ -1,41 +1,41 @@
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.ArrayList;
+import java.io.OutputStreamWriter;
 import java.util.StringTokenizer;
 
 public class Main {
 
 	public static void main(String[] args) throws IOException {
 		BufferedReader bf = new BufferedReader(new InputStreamReader(System.in));
-		int N = Integer.parseInt(bf.readLine());
+		BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
+		int M = Integer.parseInt(bf.readLine());
 		StringTokenizer st;
-		ArrayList<Integer> A[] = new ArrayList[N];
-		int visit[];
-		for (int i = 0; i < N; i++) {
-			A[i] = new ArrayList<Integer>();
+		boolean a[] = new boolean[21];
+		for (int i = 0; i < M; i++) {
 			st = new StringTokenizer(bf.readLine());
-			for (int j = 0; j < N; j++) {
-				int a = Integer.parseInt(st.nextToken());
-				if (a == 1)
-					A[i].add(j);
+			String str = st.nextToken();
+			if (str.equals("all")) {
+				for (int j = 1; j < 21; j++)
+					a[j] = true;
+				continue;
+			} else if (str.equals("empty")) {
+				for (int j = 1; j < 21; j++)
+					a[j] = false;
+				continue;
 			}
+			int x = Integer.parseInt(st.nextToken());
+			if (str.equals("add"))
+				a[x] = true;
+			else if (str.equals("remove"))
+				a[x] = false;
+			else if (str.equals("check")) 
+				bw.write((a[x] ? "1" : "0") + "\n");
+			else if (str.equals("toggle"))
+				a[x] = !a[x];
 		}
-		for (int i = 0; i < N; i++) {
-			visit = new int[N];
-			DFS(i, A, visit);
-			for (int j = 0; j < N; j++)
-				System.out.print(visit[j] + " ");
-			System.out.println();
-		}
-	}
-
-	static void DFS(int num, ArrayList<Integer> A[], int visit[]) {
-		for (int i = 0; i < A[num].size(); i++) {
-			if (visit[A[num].get(i)] == 0) {
-				visit[A[num].get(i)] = 1;
-				DFS(A[num].get(i), A, visit);
-			}
-		}
+		bw.flush();
+		bw.close();
 	}
 }
