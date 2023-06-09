@@ -3,6 +3,7 @@ import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
+import java.util.HashMap;
 import java.util.StringTokenizer;
 
 public class Main {
@@ -10,30 +11,19 @@ public class Main {
 	public static void main(String[] args) throws IOException {
 		BufferedReader bf = new BufferedReader(new InputStreamReader(System.in));
 		BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
-		int M = Integer.parseInt(bf.readLine());
-		StringTokenizer st;
-		boolean a[] = new boolean[21];
-		for (int i = 0; i < M; i++) {
+		StringTokenizer st= new StringTokenizer(bf.readLine());
+		int N = Integer.parseInt(st.nextToken());
+		int M = Integer.parseInt(st.nextToken());
+		HashMap<String, String> a = new HashMap<String, String>();
+		for (int i = 0; i < N; i++) {
 			st = new StringTokenizer(bf.readLine());
-			String str = st.nextToken();
-			if (str.equals("all")) {
-				for (int j = 1; j < 21; j++)
-					a[j] = true;
-				continue;
-			} else if (str.equals("empty")) {
-				for (int j = 1; j < 21; j++)
-					a[j] = false;
-				continue;
-			}
-			int x = Integer.parseInt(st.nextToken());
-			if (str.equals("add"))
-				a[x] = true;
-			else if (str.equals("remove"))
-				a[x] = false;
-			else if (str.equals("check")) 
-				bw.write((a[x] ? "1" : "0") + "\n");
-			else if (str.equals("toggle"))
-				a[x] = !a[x];
+			String site = st.nextToken();
+			String password = st.nextToken();
+			a.put(site, password);
+		}
+		for(int i=0;i<M;i++) {
+			String str = bf.readLine();
+			bw.write(a.get(str) + "\n");
 		}
 		bw.flush();
 		bw.close();
