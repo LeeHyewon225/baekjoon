@@ -15,5 +15,4 @@ public class Main {
 		System.out.println(a + " " + b + " " + c + " " + d + " " + q + " " + r);
 		System.out.println((c+q) + " " + r);
 	}
-
 }
