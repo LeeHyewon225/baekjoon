@@ -26,6 +26,6 @@ public class Main {
 			j--;
 			count += c;
 		}
-		System.out.println(count);
+		System.out.println(count); 
 	}
 }
