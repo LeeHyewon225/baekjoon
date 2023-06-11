@@ -11,21 +11,15 @@ public class Main {
 		int N = Integer.parseInt(st.nextToken());
 		int K = Integer.parseInt(st.nextToken());
 		int money[] = new int[N];
-		int j = 0;
-		for (int i = 0; i < N; i++) {
+		for (int i = 0; i < N; i++) 
 			money[i] = Integer.parseInt(br.readLine());
-			if (money[i] <= K)
-				j = i;
-		}
-		int now = 0;
 		int count = 0;
-		while (K > 0) {
-			int c = K / money[j];
-			now += c * money[j];
-			K -= c * money[j];
-			j--;
-			count += c;
+		for (int i = N - 1; i >= 0; i--) {
+			if (money[i] <= K) {
+				count += K / money[i];
+				K = K % money[i];
+			}
 		}
-		System.out.println(count); 
+		System.out.println(count);
 	}
 }
