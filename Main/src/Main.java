@@ -1,15 +1,12 @@
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.StringTokenizer;
 
 public class Main {
 
 	public static void main(String[] args) throws IOException {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-		StringTokenizer st = new StringTokenizer(br.readLine());
-		long A = Long.parseLong(st.nextToken());
-		long B = Long.parseLong(st.nextToken());
+		int N = Integer.parseInt(br.readLine());
 		boolean prime[] = new boolean[10000001];
 		prime[1] = true;
 		for (int i = 2; i <= Math.sqrt(10000000); i++) {
@@ -18,21 +15,12 @@ public class Main {
 					prime[i * j] = true;
 				}
 		}
-		int count=0;
-		for (int i = 2; i <= 10000000; i++)
+		for (int i = N; i <= 10000000; i++)
 			if (!prime[i]) {
-				double k = i;
-				double a = A / k;
-				double b = B / k;
-				while(true) {
-					if(k > b)
-						break;
-					if(k >= a)
-						count++;
-					a /= k;
-					b /= k;
+				if(i==Integer.parseInt(new StringBuffer(String.valueOf(i)).reverse().toString())) {
+					System.out.println(i);
+					break;
 				}
 			}
-		System.out.println(count);
 	}
 }
