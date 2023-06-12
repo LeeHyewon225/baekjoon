@@ -8,18 +8,18 @@ public class Main {
 	public static void main(String[] args) throws IOException {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 		StringTokenizer st = new StringTokenizer(br.readLine());
-		int A = Integer.parseInt(st.nextToken());
-		int B = Integer.parseInt(st.nextToken());
-		int count = 0;
-		while (A < B) {
-			if (B % 10 == 1)
-				B /= 10;
-			else if(B % 2 == 1)
-				break;
-			else
-				B /= 2;
-			count++;
+		int M = Integer.parseInt(st.nextToken());
+		int N = Integer.parseInt(st.nextToken());
+		boolean a[] = new boolean[N + 1];
+		a[1] = true;
+		for (int i = 2; i <= N; i++) {
+			if (!a[i])
+				for (int j = 2; j * i <= N; j++) {
+					a[i * j] = true;
+				}
 		}
-		System.out.println(A == B ? count + 1 : -1);
+		for (int i = M; i <= N; i++)
+			if (!a[i])
+				System.out.println(i);
 	}
 }
