@@ -1,69 +1,61 @@
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.ArrayList;
 import java.util.StringTokenizer;
 
 public class Main {
 
+	static int N, M;
+	static int answer = 0;
+	static int R_answer = 0;
+	static int B_answer = 0;
+	static int diretion_list[][] = { { 0, 0 }, { -1, 0 }, { 0, 1 }, { 1, 0 }, { 0, -1 } };
+
 	public static void main(String[] args) throws IOException {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-		int N = Integer.parseInt(br.readLine());
-		StringTokenizer st;
-		long lcm = 1;
-		ArrayList<Node> A[] = new ArrayList[N];
-		int visit[] = new int[N];
-		long result[] = new long[N];
-		for (int i = 0; i < N; i++)
-			A[i] = new ArrayList<Node>();
-		for (int i = 0; i < N - 1; i++) {
+		StringTokenizer st = new StringTokenizer(br.readLine());
+		int N = Integer.parseInt(st.nextToken());
+		int M = Integer.parseInt(st.nextToken());
+		st = new StringTokenizer(br.readLine());
+		int r = Integer.parseInt(st.nextToken());
+		int c = Integer.parseInt(st.nextToken());
+		int d = Integer.parseInt(st.nextToken());
+		int clean[][] = new int[N][M];
+		for (int i = 0;i < N;i++) {
 			st = new StringTokenizer(br.readLine());
-			int a = Integer.parseInt(st.nextToken());
-			int b = Integer.parseInt(st.nextToken());
-			int p = Integer.parseInt(st.nextToken());
-			int q = Integer.parseInt(st.nextToken());
-			lcm *= p * q / gcd(p, q);
-			A[a].add(new Node(b, p, q));
-			A[b].add(new Node(a, q, p));
-		}
-		result[0] = lcm;
-		visit[0] = 1;
-		DFS(0, A, visit, result);
-		long gcd = result[0];
-		for (int i = 1; i < N; i++) {
-			gcd = gcd(gcd, result[i]);
-		}
-		for (int i = 0; i < N; i++)
-			System.out.print(result[i] / gcd + " ");
+			for (int j = 0;j < M;j++)
+				clean[i][j] = Integer.parseInt(st.nextToken());
 	}
 
-	static void DFS(int n, ArrayList<Node> A[], int visit[], long result[]) {
-		for (int i = 0; i < A[n].size(); i++) {
-			Node node = A[n].get(i);
-			if (visit[node.b] == 0) {
-				visit[node.b] = 1;
-				result[node.b] = result[n] * node.q / node.p;
-				DFS(node.b, A, visit, result);
+	int count = 0;
+	int direction[][] = new int[4][4];
+
+	// back
+	direction[0][0]=1;direction[0][1]=0;direction[1][0]=0;direction[1][1]=-1;direction[2][0]=-1;direction[2][1]=0;direction[3][0]=0;direction[3][1]=1;
+
+	// left
+	direction[0][2]=0;direction[0][3]=-1;direction[1][2]=-1;direction[1][3]=0;direction[2][2]=0;direction[2][3]=1;direction[3][2]=1;direction[3][3]=0;
+
+	while(true)
+	{
+		if (clean[r][c] == 0) {
+			count++;
+			clean[r][c] = 2;
+		}
+		if (clean[r][c - 1] != 0 && clean[r][c + 1] != 0 && clean[r + 1][c] != 0 && clean[r - 1][c] != 0) {
+			if (clean[r + direction[d][0]][c + direction[d][1]] == 1)
+				break;
+			else {
+				r += direction[d][0];
+				c += direction[d][1];
+				continue;
 			}
 		}
-	}
-
-	static long gcd(long a, long b) {
-		if (a % b == 0)
-			return b;
-		else
-			return gcd(b, a % b);
-	}
-
-	static class Node {
-		public int b;
-		public int p;
-		public int q;
-
-		public Node(int b, int p, int q) {
-			this.b = b;
-			this.p = p;
-			this.q = q;
+		if (clean[r + direction[d][2]][c + direction[d][3]] == 0) {
+			r += direction[d][2];
+			c += direction[d][3];
 		}
-	}
-}
+		d -= 1;
+		d = (d < 0) ? 3 : d;
+	}System.out.println(count);
+}}
