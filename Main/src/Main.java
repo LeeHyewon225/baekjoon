@@ -1,72 +1,68 @@
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.LinkedList;
-import java.util.Queue;
+import java.util.ArrayList;
 import java.util.StringTokenizer;
 
 public class Main {
-	static int dx[] = { -1, 1, 0, 0 };
-	static int dy[] = { 0, 0, -1, 1 };
-	static char map[][];
-	static int visit[][][];
-	static int N;
-	static int M;
-	static int min = Integer.MAX_VALUE;
 
 	public static void main(String[] args) throws IOException {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 		StringTokenizer st = new StringTokenizer(br.readLine());
-		N = Integer.parseInt(st.nextToken());
-		M = Integer.parseInt(st.nextToken());
-		map = new char[N][M];
-		visit = new int[N][M][2];
+		int N = Integer.parseInt(st.nextToken());
+		int M = Integer.parseInt(st.nextToken());
+		int visit[] = new int[N];
+		st = new StringTokenizer(br.readLine());
+		int truth_count = Integer.parseInt(st.nextToken());
+		int truth[] = new int[N];
+		for (int i = 0; i < truth_count; i++)
+			truth[Integer.parseInt(st.nextToken()) - 1]++;
+		ArrayList<Integer> a[] = new ArrayList[N];
 		for (int i = 0; i < N; i++)
-			map[i] = br.readLine().toCharArray();
-		DFS(0, 0);
-		System.out.println(min == Integer.MAX_VALUE ? -1 : min);
-	}
-
-	static void DFS(int x, int y) {
-		Queue<Map> queue = new LinkedList<Map>();
-		visit[0][0][0] = 1;
-		queue.add(new Map(x, y, 0));
-		while (!queue.isEmpty()) {
-			Map now = queue.poll();
-			if (now.x == N - 1 && now.y == M - 1) {
-				min = visit[now.x][now.y][now.wall];
-				return;
-			} else
-				for (int i = 0; i < 4; i++) {
-					int x2 = now.x + dx[i];
-					int y2 = now.y + dy[i];
-					if (0 <= x2 && x2 < N && 0 <= y2 && y2 < M)
-						if (now.wall == 0) {
-							if (map[x2][y2] == '0' && visit[x2][y2][0] == 0) {
-								visit[x2][y2][0] = visit[now.x][now.y][0] + 1;
-								queue.add(new Map(x2, y2, now.wall));
-							} else if (now.wall == 0 && map[x2][y2] == '1') {
-								visit[x2][y2][1] = visit[now.x][now.y][0] + 1;
-								queue.add(new Map(x2, y2, 1));
-							}
-						} else if (map[x2][y2] == '0' && visit[x2][y2][1] == 0) {
-							visit[x2][y2][1] = visit[now.x][now.y][1] + 1;
-							queue.add(new Map(x2, y2, 1));
-						}
-				}
-
+			a[i] = new ArrayList<Integer>();
+		ArrayList<Integer> party[] = new ArrayList[M];
+		for (int i = 0; i < M; i++)
+			party[i] = new ArrayList<Integer>();
+		for (int i = 0; i < M; i++) {
+			st = new StringTokenizer(br.readLine());
+			int party_count = Integer.parseInt(st.nextToken());
+			int person1 = Integer.parseInt(st.nextToken()) - 1;
+			party[i].add(person1);
+			for (int j = 1; j < party_count; j++) {
+				int person2 = Integer.parseInt(st.nextToken()) - 1;
+				party[i].add(person2);
+				a[person1].add(person2);
+				a[person2].add(person1);
+				person1 = person2;
+			}
 		}
+		for (int i = 0; i < N; i++) {
+			if (truth[i] == 1 && visit[i] == 0) {
+				visit[i] = 1;
+				BFS(i, a, visit);
+			}
+		}
+		int count = 0;
+		for (int i = 0; i < M; i++) {
+			int lie = 1;
+			for (int j = 0; j < party[i].size(); j++) {
+				if (visit[party[i].get(j)] == 1) {
+					lie = 0;
+					break;
+				}
+			}
+			count += lie;
+		}
+		System.out.println(count);
 	}
 
-	static class Map {
-		int x;
-		int y;
-		int wall;
-
-		public Map(int x, int y, int wall) {
-			this.x = x;
-			this.y = y;
-			this.wall = wall;
+	static void BFS(int n, ArrayList<Integer> a[], int visit[]) {
+		for (int i = 0; i < a[n].size(); i++) {
+			int now = (int) a[n].get(i);
+			if (visit[now] == 0) {
+				visit[now] = 1;
+				BFS(now, a, visit);
+			}
 		}
 	}
 }
