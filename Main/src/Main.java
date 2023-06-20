@@ -1,56 +1,83 @@
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.Queue;
 import java.util.StringTokenizer;
 
 public class Main {
 	static boolean binary_graph = true;
+	static int result[] = new int[999999];
+	static int index = 0;
 
 	public static void main(String[] args) throws IOException {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-		int K = Integer.parseInt(br.readLine());
-		for (int k = 0; k < K; k++) {
-			StringTokenizer st = new StringTokenizer(br.readLine());
-			int N = Integer.parseInt(st.nextToken());
-			int M = Integer.parseInt(st.nextToken());
-			ArrayList<Integer> A[] = new ArrayList[N];
-			int visit[] = new int[N];
-			for (int i = 0; i < N; i++)
-				A[i] = new ArrayList<Integer>();
-			for (int i = 0; i < M; i++) {
-				st = new StringTokenizer(br.readLine());
-				int a = Integer.parseInt(st.nextToken()) - 1;
-				int b = Integer.parseInt(st.nextToken()) - 1;
-				A[a].add(b);
-				A[b].add(a);
+		StringTokenizer st = new StringTokenizer(br.readLine());
+		int A = Integer.parseInt(st.nextToken());
+		int B = Integer.parseInt(st.nextToken());
+		int C = Integer.parseInt(st.nextToken());
+		result = new int[C + 1];
+		int visit[][] = new int[A + 1][B + 1];
+		BFS(A, B, C, visit);
+		for (int i = 0; i <= C; i++)
+			System.out.print(result[i] == 0 ? "" : i + " ");
+	}
+
+	static void BFS(int A, int B, int C, int visit[][]) {
+		Queue<water> q = new LinkedList<water>();
+		visit[0][0] = 1;
+		q.add(new water(0, 0));
+		while (!q.isEmpty()) {
+			int a = -1, b = -1;
+			water now = q.poll();
+			int now_c = C - now.a - now.b;
+			if (now.a == 0)
+				result[now_c]++;
+			//C->A,B
+			a = now.a + now_c >= A ? A : now.a + now_c;
+			if (visit[a][now.b] == 0) {
+				visit[a][now.b] = 1;
+				q.add(new water(a, now.b));
 			}
-			binary_graph = true;
-			for (int i = 0; i < N; i++)
-				if (visit[i] == 0)
-					BFS(i, A, visit);
-			System.out.println(binary_graph ? "YES" : "NO");
+			b = now.b + now_c >= B ? B : now.b + now_c;
+			if (visit[now.a][b] == 0) {
+				visit[now.a][b] = 1;
+				q.add(new water(now.a, b));
+			}
+			//B->A,C
+			a = now.a + now.b >= A ? A : now.a + now.b;
+			b = a == A ? now.b - A + now.a : 0;
+			if (visit[a][b] == 0) {
+				visit[a][b] = 1;
+				q.add(new water(a, b));
+			}
+			b = now.b + now_c >= C ? now.b - C + now_c : 0;
+			if (visit[now.a][b] == 0) {
+				visit[now.a][b] = 1;
+				q.add(new water(now.a, b));
+			}
+			//A->B,C
+			b = now.b + now.a >= B ? B : now.b + now.a;
+			a = b == B ? now.a - B + now.b : 0;
+			if (visit[a][b] == 0) {
+				visit[a][b] = 1;
+				q.add(new water(a, b));
+			}
+			a = now.a + now_c >= C ? now.a - C + now_c : 0;
+			if (visit[a][now.b] == 0) {
+				visit[a][now.b] = 1;
+				q.add(new water(a, now.b));
+			}
 		}
 	}
 
-	static void BFS(int n, ArrayList<Integer> A[], int visit[]) {
-		Queue<Integer> q = new LinkedList<Integer>();
-		visit[n] = 1;
-		q.add(n);
-		while (!q.isEmpty()) {
-			int now = q.poll();
-			for (int i = 0; i < A[now].size(); i++) {
-				int a = A[now].get(i);
-				if (visit[a] == 0) {
-					visit[a] = -visit[now];
-					q.add(a);
-				} else if (visit[a] == visit[now]) {
-					binary_graph = false;
-					return;
-				}
-			}
+	static class water {
+		int a;
+		int b;
+
+		public water(int a, int b) {
+			this.a = a;
+			this.b = b;
 		}
 	}
 }
