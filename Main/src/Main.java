@@ -8,23 +8,28 @@ public class Main {
 
 	public static void main(String[] args) throws IOException {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-		StringTokenizer st = new StringTokenizer(br.readLine());
-		int n = Integer.parseInt(st.nextToken());
-		int m = Integer.parseInt(st.nextToken());
+		StringTokenizer st;
+		int n = Integer.parseInt(br.readLine());
+		int m = Integer.parseInt(br.readLine());
 		Node = new int[n + 1];
-		for (int i = 1; i <= n; i++) {
+		for (int i = 1; i <= n; i++)
 			Node[i] = i;
-		}
-		for (int i = 0; i < m; i++) {
+		for (int i = 1; i <= n; i++) {
 			st = new StringTokenizer(br.readLine());
-			int t = Integer.parseInt(st.nextToken());
-			int a = Integer.parseInt(st.nextToken());
-			int b = Integer.parseInt(st.nextToken());
-			if (t == 0)
-				union(a, b);
-			else
-				System.out.println(find(a) == find(b) ? "YES" : "NO");
+			for (int j = 1; j <= n; j++)
+				if (Integer.parseInt(st.nextToken()) == 1)
+					union(i, j);
 		}
+		st = new StringTokenizer(br.readLine());
+		int a = Integer.parseInt(st.nextToken());
+		for (int i = 1; i < m; i++) {
+			int b = Integer.parseInt(st.nextToken());
+			if (find(a) != find(b)) {
+				System.out.println("NO");
+				return;
+			}
+		}
+		System.out.println("YES");
 	}
 
 	static void union(int a, int b) {
