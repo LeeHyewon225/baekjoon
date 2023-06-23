@@ -10,32 +10,40 @@ public class Main {
 
 	public static void main(String[] args) throws IOException {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-		StringTokenizer st = new StringTokenizer(br.readLine());
-		int n = Integer.parseInt(st.nextToken());
-		int m = Integer.parseInt(st.nextToken());
+		int n = Integer.parseInt(br.readLine());
+		int time[] = new int[n];
+		int result[] = new int[n];
 		ArrayList<Integer> s[] = new ArrayList[n];
 		int d[] = new int[n];
 		for (int i = 0; i < n; i++)
 			s[i] = new ArrayList<Integer>();
-		for (int i = 0; i < m; i++) {
-			st = new StringTokenizer(br.readLine());
-			int a = Integer.parseInt(st.nextToken()) - 1;
-			int b = Integer.parseInt(st.nextToken()) - 1;
-			s[a].add(b);
-			d[b]++;
+		for (int i = 0; i < n; i++) {
+			StringTokenizer st = new StringTokenizer(br.readLine());
+			time[i] = Integer.parseInt(st.nextToken());
+			while (true) {
+				int node = Integer.parseInt(st.nextToken()) - 1;
+				if (node == -2)
+					break;
+				s[node].add(i);
+				d[i]++;
+			}
 		}
 		Queue<Integer> q = new LinkedList<Integer>();
 		for (int i = 0; i < n; i++)
-			if (d[i] == 0) 
+			if (d[i] == 0) {
 				q.add(i);
+				result[i] = time[i];
+			}
 		while (!q.isEmpty()) {
 			int now = q.poll();
-			System.out.print(now + 1 + " ");
 			for (int i : s[now]) {
 				d[i]--;
-				if (d[i] == 0)
+				result[i] = Math.max(result[i], result[now] + time[i]);
+				if (d[i] == 0) 
 					q.add(i);
 			}
 		}
+		for (int i = 0; i < n; i++)
+			System.out.println(result[i]);
 	}
 }
