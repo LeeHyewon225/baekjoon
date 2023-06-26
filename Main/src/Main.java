@@ -9,27 +9,29 @@ public class Main {
 
 	public static void main(String[] args) throws IOException {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-		StringTokenizer st = new StringTokenizer(br.readLine());
-		int V = Integer.parseInt(st.nextToken());
-		int E = Integer.parseInt(st.nextToken());
-		int K = Integer.parseInt(br.readLine()) - 1;
-		ArrayList<Node> A[] = new ArrayList[V];
-		for (int i = 0; i < V; i++)
+		int N = Integer.parseInt(br.readLine());
+		int M = Integer.parseInt(br.readLine());
+		StringTokenizer st;
+		ArrayList<Node> A[] = new ArrayList[N];
+		for (int i = 0; i < N; i++)
 			A[i] = new ArrayList<Node>();
-		for (int i = 0; i < E; i++) {
+		for (int i = 0; i < M; i++) {
 			st = new StringTokenizer(br.readLine());
-			int u = Integer.parseInt(st.nextToken()) - 1;
-			int v = Integer.parseInt(st.nextToken()) - 1;
-			int w = Integer.parseInt(st.nextToken());
-			A[u].add(new Node(v, w));
+			int a = Integer.parseInt(st.nextToken()) - 1;
+			int b = Integer.parseInt(st.nextToken()) - 1;
+			int v = Integer.parseInt(st.nextToken());
+			A[a].add(new Node(b, v));
 		}
-		int distance[] = new int[V];
-		int visit[] = new int[V];
-		for (int i = 0; i < V; i++)
+		st = new StringTokenizer(br.readLine());
+		int start = Integer.parseInt(st.nextToken()) - 1;
+		int end = Integer.parseInt(st.nextToken()) - 1;
+		int distance[] = new int[N];
+		int visit[] = new int[N];
+		for (int i = 0; i < N; i++)
 			distance[i] = Integer.MAX_VALUE;
-		distance[K] = 0;
+		distance[start] = 0;
 		PriorityQueue<Node> queue = new PriorityQueue<Node>();
-		queue.add(new Node(K, 0));
+		queue.add(new Node(start, 0));
 		while (!queue.isEmpty()) {
 			Node now = queue.poll();
 			if (visit[now.node] == 1)
@@ -41,8 +43,7 @@ public class Main {
 					queue.add(new Node(node.node, distance[node.node]));
 				}
 		}
-		for (int i = 0; i < V; i++)
-			System.out.println(distance[i] == Integer.MAX_VALUE ? "INF" : distance[i]);
+		System.out.println(distance[end]);
 	}
 
 	static class Node implements Comparable<Node> {
