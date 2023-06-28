@@ -6,73 +6,81 @@ import java.util.PriorityQueue;
 import java.util.StringTokenizer;
 
 public class Main {
-	static int Go_Back[];
-	static int N, M, X;
 
 	public static void main(String[] args) throws IOException {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-		StringTokenizer st = new StringTokenizer(br.readLine());
-		N = Integer.parseInt(st.nextToken());
-		M = Integer.parseInt(st.nextToken());
-		X = Integer.parseInt(st.nextToken()) - 1;
-		int max = 0;
-		ArrayList<Node> Go_a[] = new ArrayList[N];
-		ArrayList<Node> Back_a[] = new ArrayList[N];
-		for (int i = 0; i < N; i++) {
-			Go_a[i] = new ArrayList<Node>();
-			Back_a[i] = new ArrayList<Node>();
+		StringTokenizer st;
+		int n = Integer.parseInt(br.readLine());
+		int m = Integer.parseInt(br.readLine());
+		ArrayList<Node> a[] = new ArrayList[n];
+		ArrayList<Node> a_reverse[] = new ArrayList[n];
+		for (int i = 0; i < n; i++) {
+			a[i] = new ArrayList<Node>();
+			a_reverse[i] = new ArrayList<Node>();
 		}
-		Go_Back = new int[N];
-		for (int i = 0; i < M; i++) {
+		for (int i = 0; i < m; i++) {
 			st = new StringTokenizer(br.readLine());
-			int A = Integer.parseInt(st.nextToken()) - 1;
-			int B = Integer.parseInt(st.nextToken()) - 1;
-			int T = Integer.parseInt(st.nextToken());
-			Go_a[B].add(new Node(A, T));
-			Back_a[A].add(new Node(B, T));
+			int s = Integer.parseInt(st.nextToken()) - 1;
+			int e = Integer.parseInt(st.nextToken()) - 1;
+			int v = Integer.parseInt(st.nextToken());
+			a[s].add(new Node(e, v));
+			a_reverse[e].add(new Node(s, v));
 		}
-		party(Go_a);
-		party(Back_a);
-		for (int i = 0; i < Go_Back.length; i++)
-			if (max < Go_Back[i])
-				max = Go_Back[i];
-		System.out.println(max);
-	}
+		st = new StringTokenizer(br.readLine());
+		int A = Integer.parseInt(st.nextToken()) - 1;
+		int B = Integer.parseInt(st.nextToken()) - 1;
 
-	static void party(ArrayList<Node> a[]) {
+		int visit[] = new int[n];
+		int distance[] = new int[n];
+		for (int i = 0; i < distance.length; i++)
+			distance[i] = Integer.MAX_VALUE;
+		distance[A] = 0;
 		PriorityQueue<Node> q = new PriorityQueue<Node>();
-		int visit[] = new int[N];
-		int distance[] = new int[N];
-		for (int j = 0; j < distance.length; j++) 
-			distance[j] = Integer.MAX_VALUE;
-		distance[X] = 0;
-		q.add(new Node(X, 0));
+		q.add(new Node(A, 0));
 		while (!q.isEmpty()) {
 			Node now = q.poll();
 			if (visit[now.node] == 1)
 				continue;
 			visit[now.node] = 1;
-			for (Node n : a[now.node]) 
-				if (visit[n.node] == 0 && distance[n.node] > distance[now.node] + n.time) {
-					distance[n.node] = distance[now.node] + n.time;
-					q.add(new Node(n.node, distance[n.node]));
-				}		
+			for (Node N : a[now.node])
+				if (visit[N.node] == 0 && distance[N.node] > distance[now.node] + N.value) {
+					distance[N.node] = distance[now.node] + N.value;
+					q.add(new Node(N.node, distance[N.node]));
+				}
 		}
-		for (int i = 0; i < distance.length; i++) 
-			Go_Back[i] += distance[i];
+		System.out.println(distance[B]);
+
+		int count = 0;
+		ArrayList<Integer> result = new ArrayList<Integer>();
+		q.add(new Node(B, 0));
+		while (!q.isEmpty()) {
+			Node now = q.poll();
+			result.add(now.node + 1);
+			count++;
+			if (now.node == A)
+				break;
+			for (Node N : a_reverse[now.node])
+				if (now.value + N.value + distance[N.node] == distance[B]) {
+					q.add(new Node(N.node, now.value + N.value));
+					break;
+				}
+		}
+		System.out.println(count);
+		for (int i = result.size() - 1; i >= 0; i--)
+			System.out.print(result.get(i) + " ");
 	}
 
 	static class Node implements Comparable<Node> {
-		public int node;
-		public int time;
+		int node;
+		int value;
 
-		public Node(int node, int time) {
+		public Node(int node, int value) {
 			this.node = node;
-			this.time = time;
+			this.value = value;
 		}
 
 		public int compareTo(Node n) {
-			return this.time - n.time;
+			return this.value - n.value;
 		}
 	}
 }
