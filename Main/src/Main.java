@@ -1,43 +1,51 @@
 import java.io.BufferedReader;
-import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
 import java.util.StringTokenizer;
 
 public class Main {
 
 	public static void main(String[] args) throws IOException {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-		BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
 		StringTokenizer st = new StringTokenizer(br.readLine());
 		int N = Integer.parseInt(st.nextToken());
+		int S = Integer.parseInt(st.nextToken());
+		int E = Integer.parseInt(st.nextToken());
 		int M = Integer.parseInt(st.nextToken());
 		Edge edge[] = new Edge[M];
 		for (int i = 0; i < M; i++) {
 			st = new StringTokenizer(br.readLine());
-			int A = Integer.parseInt(st.nextToken()) - 1;
-			int B = Integer.parseInt(st.nextToken()) - 1;
+			int A = Integer.parseInt(st.nextToken());
+			int B = Integer.parseInt(st.nextToken());
 			int V = Integer.parseInt(st.nextToken());
 			edge[i] = new Edge(A, B, V);
 		}
+		long money[] = new long[N];
 		long distance[] = new long[N];
-		for (int i = 0; i < distance.length; i++)
-			distance[i] = Long.MAX_VALUE;
-		distance[0] = 0;
-		for (int i = 0; i < N - 1; i++)
-			for (int j = 0; j < M; j++)
-				if (distance[edge[j].start_node] != Long.MAX_VALUE
-						&& distance[edge[j].end_node] > distance[edge[j].start_node] + edge[j].value)
-					distance[edge[j].end_node] = distance[edge[j].start_node] + edge[j].value;
-		for (int j = 0; j < M; j++)
-			if (distance[edge[j].start_node] != Long.MAX_VALUE
-					&& distance[edge[j].end_node] > distance[edge[j].start_node] + edge[j].value) {
-				System.out.println(-1);
-				return;
+		st = new StringTokenizer(br.readLine());
+		for (int i = 0; i < money.length; i++) {
+			money[i] = Integer.parseInt(st.nextToken());
+			distance[i] = Long.MIN_VALUE;
+		}
+		distance[S] = money[S];
+		for (int i = 1; i < 100; i++)
+			for (int j = 0; j < M; j++) {
+				Edge e = edge[j];
+				if (distance[e.start_node] == Long.MAX_VALUE)
+					distance[e.end_node] = Long.MAX_VALUE;
+				else if (distance[e.start_node] != Long.MIN_VALUE
+						&& distance[e.end_node] < distance[e.start_node] - e.value + money[e.end_node]) {
+					distance[e.end_node] = distance[e.start_node] - e.value + money[e.end_node];
+					if (i >= N)
+						distance[e.end_node] = Long.MAX_VALUE;
+				}
 			}
-		for (int i = 1; i < distance.length; i++)
-			System.out.println(distance[i] == Long.MAX_VALUE ? -1 : distance[i]);
+		if (distance[E] == Long.MAX_VALUE)
+			System.out.println("Gee");
+		else if (distance[E] == Long.MIN_VALUE)
+			System.out.println("gg");
+		else
+			System.out.println(distance[E]);
 	}
 
 	static class Edge {
