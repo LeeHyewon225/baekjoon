@@ -1,9 +1,6 @@
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.Queue;
 import java.util.StringTokenizer;
 
 public class Main {
@@ -12,46 +9,39 @@ public class Main {
 
 	public static void main(String[] args) throws IOException {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-		int n = Integer.parseInt(br.readLine());
-		ArrayList<Integer> a[] = new ArrayList[n + 1];
-		visit = new int[n];
-		int root = -1;
-		for (int i = 0; i < a.length; i++)
-			a[i] = new ArrayList<Integer>();
 		StringTokenizer st = new StringTokenizer(br.readLine());
+		int n = Integer.parseInt(st.nextToken());
+		int m = Integer.parseInt(st.nextToken());
+		tNode root = new tNode();
 		for (int i = 0; i < n; i++) {
-			int q = Integer.parseInt(st.nextToken());
-			if (q == -1)
-				root = i;
-			else
-				a[q].add(i);
+			String str = br.readLine();
+			tNode now = root;
+			for (int j = 0; j < str.length(); j++) {
+				char c = str.charAt(j);
+				if (now.next[c - 'a'] == null)
+					now.next[c - 'a'] = new tNode();
+				now = now.next[c - 'a'];
+			}
+			now.isEnd = true;
 		}
-		int d = Integer.parseInt(br.readLine());
-		if (d == root) {
-			System.out.println(0);
-			return;
+		int count = 0;
+		for (int i = 0; i < m; i++) {
+			String str = br.readLine();
+			tNode now = root;
+			for (int j = 0; j < str.length(); j++) {
+				char c = str.charAt(j);
+				if (now.next[c - 'a'] == null)
+					break;
+				now = now.next[c - 'a'];
+				if (j == str.length() - 1 && now.isEnd)
+					count++;
+			}
 		}
-		BFS(root, a, d);
-		System.out.println(answer);
+		System.out.println(count);
 	}
 
-	static void BFS(int n, ArrayList<Integer> a[], int d) {
-		Queue<Integer> q = new LinkedList<Integer>();
-		q.add(n);
-		while (!q.isEmpty()) {
-			int now = q.poll();
-			int count = 0;
-			for (int next : a[now]) {
-				if (next == d)
-					continue;
-				if (visit[next] == 0) {
-					visit[next] = 1;
-					q.add(next);
-				}
-				count++;
-			}
-			if (count == 0)
-				answer++;
-		}
+	static class tNode {
+		public tNode next[] = new tNode[26];
+		public boolean isEnd;
 	}
 }
