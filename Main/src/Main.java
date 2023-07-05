@@ -8,6 +8,8 @@ public class Main {
 	static ArrayList<Integer> A[];
 	static int visit[];
 	static int parent[];
+	static int max_level = 0;
+	static int parent2[][];
 	static int level[];
 
 	public static void main(String[] args) throws IOException {
@@ -29,12 +31,18 @@ public class Main {
 		}
 		visit[1] = 1;
 		DFS(1);
+		parent2 = new int[(int) (Math.log(N) / Math.log(2)) + 1][N + 1];
+		for (int i = 0; i < parent.length; i++)
+			parent2[0][i] = parent[i];
+		for (int i = 1; i < parent2.length; i++)
+			for (int j = 1; j < N + 1; j++)
+				parent2[i][j] = parent2[i - 1][parent2[i - 1][j]];
 		int M = Integer.parseInt(br.readLine());
 		for (int i = 0; i < M; i++) {
 			st = new StringTokenizer(br.readLine());
 			int a = Integer.parseInt(st.nextToken());
 			int b = Integer.parseInt(st.nextToken());
-			System.out.println(LCA(a, b));
+			System.out.println(LCA2(a, b));
 		}
 	}
 
@@ -44,26 +52,30 @@ public class Main {
 				visit[i] = 1;
 				parent[i] = a;
 				level[i] = level[a] + 1;
+				max_level = Math.max(max_level, level[i]);
 				DFS(i);
 			}
 	}
 
-	static int LCA(int a, int b) {
+	static int LCA2(int a, int b) {
 		if (level[a] < level[b]) {
 			int temp = a;
 			a = b;
 			b = temp;
 		}
-		int n = 0;
-		int l = level[a] - level[b];
-		while (n < l) {
-			a = parent[a];
-			n++;
+		while (level[a] != level[b]) {
+			int l = (int) (Math.log(level[a] - level[b]) / Math.log(2));
+			a = parent2[l][a];
 		}
-		while (a != b) {
-			a = parent[a];
-			b = parent[b];
+		if (a == b)
+			return a;
+		int k = 0;
+		while (parent2[k][a] != parent2[k][b]) {
+			k++;
 		}
-		return a;
+		if (k <= 1)
+			return parent2[k][a];
+		else
+			return LCA2(parent2[k - 1][a], parent2[k - 1][b]);
 	}
 }
