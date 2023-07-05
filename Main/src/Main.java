@@ -4,7 +4,7 @@ import java.io.InputStreamReader;
 import java.util.StringTokenizer;
 
 public class Main {
-	static long segment_tree[];
+	static int segment_tree[];
 	static int n;
 
 	public static void main(String[] args) throws IOException {
@@ -12,54 +12,38 @@ public class Main {
 		StringTokenizer st = new StringTokenizer(br.readLine());
 		int N = Integer.parseInt(st.nextToken());
 		int M = Integer.parseInt(st.nextToken());
-		int K = Integer.parseInt(st.nextToken());
 		n = 2;
 		while (n < N)
 			n *= 2;
 		n *= 2;
-		segment_tree = new long[n];
+		segment_tree = new int[n];
 		int index = n / 2;
-		for (int i = 0; i < N; i++) 
-			segment_tree[index++] = Long.parseLong(br.readLine());
-		for (int i = n / 2 - 1; i > 0; i--) 
-			segment_tree[i] = segment_tree[i * 2] + segment_tree[i * 2 + 1];
-		for (int i = 0; i < M + K; i++) {
+		for (int i = 0; i < N; i++)
+			segment_tree[index++] = Integer.parseInt(br.readLine());
+		for (int i = n / 2 - 1; i > 0; i--)
+			segment_tree[i] = Math.min(segment_tree[i * 2], segment_tree[i * 2 + 1]);
+		for (int i = 0; i < M; i++) {
 			st = new StringTokenizer(br.readLine());
 			int a = Integer.parseInt(st.nextToken());
 			int b = Integer.parseInt(st.nextToken());
-			long c = Long.parseLong(st.nextToken());
-			if (a == 1)
-				Change(b, c);
-			else if (a == 2)
-				System.out.println(Prefix_Sum(b, c));
+			System.out.println(Prefix_Sum(a, b));
 		}
 	}
 
-	static void Change(int b, long c) {
-		b += n / 2 - 1;
-		long sum = c - segment_tree[b];
-		segment_tree[b] = c;
-		b /= 2;
-		while (b >= 1) {
-			segment_tree[b] += sum;
-			b /= 2;
-		}
-	}
-
-	static long Prefix_Sum(int b, long c) {
-		int start = b + n / 2 - 1;
-		long end = c + n / 2 - 1;
-		long sum = 0;
+	static long Prefix_Sum(int a, int b) {
+		int start = a + n / 2 - 1;
+		int end = b + n / 2 - 1;
+		int min = Integer.MAX_VALUE;
 		while (start < end) {
 			if (start % 2 == 1)
-				sum += segment_tree[start];
+				min = Math.min(min, segment_tree[start]);
 			if (end % 2 == 0)
-				sum += segment_tree[(int) end];
+				min = Math.min(min, segment_tree[end]);
 			start = (start + 1) / 2;
 			end = (end - 1) / 2;
 		}
 		if (start == end)
-			sum += segment_tree[start];
-		return sum;
+			min = Math.min(min, segment_tree[start]);
+		return min;
 	}
 }
