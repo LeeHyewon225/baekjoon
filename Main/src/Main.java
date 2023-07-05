@@ -19,11 +19,8 @@ public class Main {
 		n *= 2;
 		segment_tree = new long[n];
 		int index = n / 2;
-		for (int i = 0; i < N; i++) {
-			long a = Long.parseLong(br.readLine());
-			segment_tree[2] = a;
-			segment_tree[index++] = a;
-		}
+		for (int i = 0; i < N; i++) 
+			segment_tree[index++] = Long.parseLong(br.readLine());
 		for (int i = n / 2 - 1; i > 0; i--) 
 			segment_tree[i] = segment_tree[i * 2] + segment_tree[i * 2 + 1];
 		for (int i = 0; i < M + K; i++) {
