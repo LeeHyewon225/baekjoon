@@ -8,7 +8,6 @@ public class Main {
 	static ArrayList<Integer> A[];
 	static int visit[];
 	static int parent[];
-	static int max_level = 0;
 	static int parent2[][];
 	static int level[];
 
@@ -52,7 +51,6 @@ public class Main {
 				visit[i] = 1;
 				parent[i] = a;
 				level[i] = level[a] + 1;
-				max_level = Math.max(max_level, level[i]);
 				DFS(i);
 			}
 	}
