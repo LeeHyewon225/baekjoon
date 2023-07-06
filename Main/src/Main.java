@@ -1,27 +1,32 @@
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.StringTokenizer;
 
 public class Main {
 
 	public static void main(String[] args) throws IOException {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 		int N = Integer.parseInt(br.readLine());
-		long dp[][] = new long[N][10];
-		for (int i = 1; i < 10; i++) {
-			dp[0][i] = 1;
+		int left[] = new int[N + 2];
+		int right[] = new int[N + 2];
+		int list[] = new int[N + 1];
+		StringTokenizer st = new StringTokenizer(br.readLine());
+		for (int i = 1; i <= N; i++)
+			list[i] = Integer.parseInt(st.nextToken());
+		for (int i = 0; i < left.length; i++) {
+			left[i] = -1001;
+			right[i] = -1001;
 		}
-		for (int i = 1; i < N; i++) {
-			dp[i][0] = dp[i - 1][1];
-			for (int j = 1; j < 9; j++)
-				dp[i][j] = (dp[i - 1][j - 1] + dp[i - 1][j + 1]) % 1000000000;
-			dp[i][9] = dp[i - 1][8];
+		for (int i = 1; i < N + 1; i++) {
+			left[i] = Math.max(list[i], left[i - 1] + list[i]);
+			right[N + 1 - i] = Math.max(list[N + 1 - i], right[N + 2 - i] + list[N + 1 - i]);
 		}
-		long sum = 0;
-		for (int i = 0; i < 10; i++) {
-			sum += dp[N - 1][i];
-			sum %= 1000000000;
+		int max = Integer.MIN_VALUE;
+		for (int i = 1; i <= N; i++) {
+			max = Math.max(left[i], max);
+			max = Math.max(max, left[i - 1] + right[i + 1]);
 		}
-		System.out.println(sum);
+		System.out.println(max);
 	}
 }
