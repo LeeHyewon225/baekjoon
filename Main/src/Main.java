@@ -9,20 +9,14 @@ public class Main {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 		StringTokenizer st = new StringTokenizer(br.readLine());
 		int n = Integer.parseInt(st.nextToken());
-		int m = Integer.parseInt(st.nextToken());
-		int D[][] = new int[n + 1][m + 1];
-		int max = 0;
-		for (int i = 1; i <= n; i++) {
-			String str = br.readLine();
-			for (int j = 1; j <= m; j++) {
-				char c = str.charAt(j - 1);
-				if (c == '1') {
-					D[i][j] = Math.min(Math.min(D[i - 1][j], D[i][j - 1]), D[i - 1][j - 1]) + 1;
-					max = Math.max(max, D[i][j]);
-				} else
-					D[i][j] = 0;
-			}
-		}
-		System.out.println(max * max);
+		int l = Integer.parseInt(st.nextToken());
+		int r = Integer.parseInt(st.nextToken());
+		long D[][][] = new long[n + 1][l + 1][r + 1];
+		D[1][1][1] = 1;
+		for (int i = 2; i < n + 1; i++)
+			for (int j = 1; j < l + 1; j++)
+				for (int k = 1; k < r + 1; k++)
+					D[i][j][k] = (D[i - 1][j - 1][k] + D[i - 1][j][k - 1] + D[i - 1][j][k] * (i - 2)) % 1000000007;
+		System.out.println(D[n][l][r]);
 	}
 }
