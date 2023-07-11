@@ -17,7 +17,7 @@ public class Main {
 		int D[][] = new int[N + 1][K + 1];
 		for (int i = 1; i <= N; i++)
 			for (int j = 1; j <= K; j++)
-				D[i][j] = j == 1 ? i : (D[i - 1][j] + D[i - 1][j - 1]);
+				D[i][j] = j == 1 ? i : (D[i - 1][j] + D[i - 1][j - 1]) % 10007;
 		System.out.println(D[N][K]);
 	}
 }
