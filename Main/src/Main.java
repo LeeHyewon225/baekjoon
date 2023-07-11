@@ -1,23 +1,22 @@
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.StringTokenizer;
 
 public class Main {
+	static int D[][] = new int[15][15];
 
 	public static void main(String[] args) throws IOException {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-		StringTokenizer st = new StringTokenizer(br.readLine());
-		int N = Integer.parseInt(st.nextToken());
-		int K = Integer.parseInt(st.nextToken());
-		if (K == 0) {
-			System.out.println(1);
-			return;
+		int T = Integer.parseInt(br.readLine());
+		for (int i = 1; i <= 14; i++)
+			D[0][i] = i;
+		for (int i = 1; i <= 14; i++)
+			for (int j = 1; j <= 14; j++)
+				D[i][j] = D[i][j - 1] + D[i - 1][j];
+		for (int t = 0; t < T; t++) {
+			int N = Integer.parseInt(br.readLine());
+			int K = Integer.parseInt(br.readLine());
+			System.out.println(D[N][K]);
 		}
-		int D[][] = new int[N + 1][K + 1];
-		for (int i = 1; i <= N; i++)
-			for (int j = 1; j <= K; j++)
-				D[i][j] = j == 1 ? i : (D[i - 1][j] + D[i - 1][j - 1]) % 10007;
-		System.out.println(D[N][K]);
 	}
 }
