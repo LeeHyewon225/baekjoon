@@ -7,26 +7,37 @@ public class Main {
 
 	public static void main(String[] args) throws IOException {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-		int M = Integer.parseInt(br.readLine());
-		double D[] = new double[M];
 		StringTokenizer st = new StringTokenizer(br.readLine());
-		double sum = 0;
-		for (int i = 0; i < M; i++) {
-			D[i] = Double.parseDouble(st.nextToken());
-			sum += D[i];
-		}
-		int K = Integer.parseInt(br.readLine());
-		double denominator = 0;
-		double numerator = 1;
-		for (int i = 0; i < M; i++)
-			if (D[i] >= K) {
-				double mul = 1;
-				for (int j = 0; j < K; j++)
-					mul *= (D[i] - j);
-				denominator += mul;
+		int N = Integer.parseInt(st.nextToken());
+		int M = Integer.parseInt(st.nextToken());
+		int K = Integer.parseInt(st.nextToken());
+		StringBuffer sb = new StringBuffer();
+		int D[][] = new int[N + M + 1][M + 1];
+		D[0][0] = 1;
+		for (int i = 1; i <= N + M; i++) {
+			D[i][0] = 1;
+			for (int j = 1; j <= M; j++) {
+				D[i][j] = D[i - 1][j] + D[i - 1][j - 1];
+				if (D[i][j] > 1000000000)
+					D[i][j] = 1000000001;
 			}
-		for (int i = 0; i < K; i++)
-			numerator *= (sum - i);
-		System.out.println(denominator / numerator);
+		}
+		if (D[N + M][M] < K) {
+			System.out.println(-1);
+			return;
+		}
+		int x = N + M - 1;
+		int z = M;
+		for (int i = 0; i < N + M; i++) {
+			if (D[x][z] >= K)
+				sb.append('a');
+			else {
+				sb.append('z');
+				K = K - D[x][z];
+				z--;
+			}
+			x--;
+		}
+		System.out.println(sb);
 	}
 }
